@@ -23,8 +23,9 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        run: terraform plan -input=false \
+             -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
         working-directory: terraform
-        run: terraform plan -input=false
 
       - name: Terraform Apply
         working-directory: terraform
