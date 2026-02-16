@@ -19,6 +19,7 @@ jobs:
         id: tag
         run: |
           TAG=${GITHUB_SHA::7}
+          echo "IMAGE TAG IS: $TAG"
           echo "image_tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Login to DockerHub
