@@ -1,0 +1,33 @@
+name: CD - Terraform Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag from CI"
+        required: true
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: terraform
+        run: terraform plan -input=false \
+          -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
+
+      - name: Terraform Apply
+        working-directory: terraform
+        run: terraform apply -auto-approve -input=false \
+          -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
