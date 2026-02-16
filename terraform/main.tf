@@ -47,7 +47,7 @@ resource "aws_instance" "strapi_ec2" {
   ami                    = var.ami_id
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.strapi_key.key_name
-  vpc_security_group_ids = [aws_security_group.strapi_sg.id]
+  vpc_security_group_ids = [aws_security_group.strapi_Ec2-sg.id]
 
   user_data = <<-EOF
               #!/bin/bash
