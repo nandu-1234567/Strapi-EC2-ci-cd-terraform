@@ -12,9 +12,14 @@ resource "aws_key_pair" "strapi_key" {
   public_key = tls_private_key.strapi_key.public_key_openssh
 }
 
+resource "local_file" "private_key" {
+  content         = tls_private_key.strapi_key.private_key_pem
+  filename        = "strapi-key.pem"
+  file_permission = "0400"
+}
+
 resource "aws_security_group" "strapi_sg" {
-  name        = "strapi-sg"
-  description = "Allow SSH and Strapi"
+  name = "strapi-sg"
 
   ingress {
     from_port   = 22
@@ -50,13 +55,11 @@ resource "aws_instance" "strapi_ec2" {
               apt install -y docker.io
               systemctl start docker
               systemctl enable docker
-              docker run -d \
-                --restart unless-stopped \
-                -p 1337:1337 \
-                ${var.docker_image}
+              docker run -d -p 1337:1337 ${var.docker_image}
               EOF
 
   tags = {
     Name = "Strapi-EC2"
   }
 }
+
