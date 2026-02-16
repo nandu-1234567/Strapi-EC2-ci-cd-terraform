@@ -8,9 +8,9 @@ resource "tls_private_key" "strapi_key" {
   rsa_bits  = 4096
 }
 
-# Create AWS key pair with unique name
+# Create AWS key pair
 resource "aws_key_pair" "strapi_key" {
-  key_name   = "strapi-key-unique-01"
+  key_name   = "strapi-key-${random_id.key_suffix.hex}"
   public_key = tls_private_key.strapi_key.public_key_openssh
 }
 
@@ -21,11 +21,21 @@ resource "local_file" "private_key" {
   file_permission = "0400"
 }
 
-# Security group with unique name
+# Random suffix for uniqueness
+resource "random_id" "key_suffix" {
+  byte_length = 2
+}
+
+# Get default VPC
+data "aws_vpc" "default" {
+  default = true
+}
+
+# Security group
 resource "aws_security_group" "strapi_sg" {
-  name        = "strapi-sg-unique-01"
+  name        = "strapi-sg-${random_id.sg_suffix.hex}"
   description = "Security group for Strapi EC2 instance"
-  vpc_id      = var.vpc_id
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     from_port   = 22
@@ -49,11 +59,16 @@ resource "aws_security_group" "strapi_sg" {
   }
 
   tags = {
-    Name = "Strapi-SG-Unique-01"
+    Name = "Strapi-SG"
   }
 }
 
-# EC2 instance with unique name
+# Random suffix for SG
+resource "random_id" "sg_suffix" {
+  byte_length = 2
+}
+
+# EC2 instance
 resource "aws_instance" "strapi_ec2" {
   ami                    = var.ami_id
   instance_type          = "t2.micro"
@@ -71,12 +86,12 @@ resource "aws_instance" "strapi_ec2" {
       -p 1337:1337 \
       -e NODE_ENV=production \
       -e APP_KEYS=key1,key2,key3,key4 \
-      --name strapi-app-unique-01 \
+      --name strapi-app \
       ${var.docker_image}
   EOF
 
   tags = {
-    Name = "Strapi-EC2-Unique-01"
+    Name = "Strapi-EC2"
   }
 }
 
