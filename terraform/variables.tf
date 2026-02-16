@@ -1,11 +1,22 @@
 variable "aws_region" {
-  default = "us-east-1"
+  description = "AWS region to deploy resources"
+  type        = string
+  default     = "us-east-1"
 }
 
 variable "ami_id" {
-  default = "ami-0b6c6ebed2801a5cb"
+  description = "AMI ID to use for the EC2 instance"
+  type        = string
+  default     = "ami-0b6c6ebed2801a5cb"
 }
 
 variable "docker_image" {
-  description = "Full Docker image name"
+  description = "Docker image to run Strapi"
+  type        = string
 }
+
+variable "vpc_id" {
+  description = "VPC ID where the security group will be created"
+  type        = string
+}
+
