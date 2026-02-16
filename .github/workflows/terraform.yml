@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       image_tag:
-        description: "Docker image tag from CI"
+        description: "Docker image tag"
         required: true
 
 jobs:
-  terraform:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +23,13 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: terraform
         run: terraform plan -input=false -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ github.event.inputs.image_tag }}"
 
-
       - name: Terraform Apply
+        working-directory: terraform
         run: terraform apply -auto-approve -input=false -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ github.event.inputs.image_tag }}"
 
+      - name: Show Terraform Output
+        working-directory: terraform
+        run: terraform output
