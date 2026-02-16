@@ -24,14 +24,8 @@ jobs:
 
       - name: Terraform Plan
         working-directory: terraform
-        run: |
-          terraform plan \
-          -var="ami_id=ami-0f58b397bc5c1f2e8" \
-          -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
+        run: terraform plan -input=false
 
       - name: Terraform Apply
         working-directory: terraform
-        run: |
-          terraform apply -auto-approve \
-          -var="ami_id=ami-0f58b397bc5c1f2e8" \
-          -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
+        run: terraform apply -auto-approve -input=false
