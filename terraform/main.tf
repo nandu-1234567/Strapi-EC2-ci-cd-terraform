@@ -54,14 +54,21 @@ resource "aws_instance" "strapi_ec2" {
   key_name               = aws_key_pair.strapi_key.key_name
   vpc_security_group_ids = [aws_security_group.strapi_sg.id]
 
-  user_data = <<-EOF
-              #!/bin/bash
-              apt update -y
-              apt install -y docker.io
-              systemctl start docker
-              systemctl enable docker
-              docker run -d -p 1337:1337 ${var.docker_image}
-              EOF
+ user_data = <<-EOF
+#!/bin/bash
+apt update -y
+apt install -y docker.io
+systemctl start docker
+systemctl enable docker
+
+docker run -d \
+-p 1337:1337 \
+-e NODE_ENV=production \
+-e APP_KEYS=key1,key2,key3,key4 \
+--name strapi \
+${var.docker_image}
+EOF
+
 
   tags = {
     Name = "Strapi-EC2"
