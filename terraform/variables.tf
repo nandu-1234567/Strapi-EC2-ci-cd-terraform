@@ -1,5 +1,5 @@
 variable "aws_region" {
-  description = "AWS Region"
+  default = "ap-south-1"
 }
 
 variable "ami_id" {
@@ -7,5 +7,5 @@ variable "ami_id" {
 }
 
 variable "docker_image" {
-  description = "Docker Image with tag"
+  description = "Full Docker image name"
 }
