@@ -18,8 +18,8 @@ resource "local_file" "private_key" {
   file_permission = "0400"
 }
 
-resource "aws_security_group" "strapi_sg" {
-  name = "strapi-sg"
+resource "aws_security_group" "strapi_Ec2-sg" {
+  name = "strapi_Ec2-sg"
 
   ingress {
     from_port   = 22
