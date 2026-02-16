@@ -1,0 +1,28 @@
+# Node dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Git
+.git
+.gitignore
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+
+# Build output
+dist
+build
+.cache
+
+# IDE
+.vscode
+.idea
