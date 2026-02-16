@@ -1,4 +1,11 @@
-variable "aws_region" {}
-variable "ami_id" {}
-variable "key_name" {}
-variable "docker_image" {}
+variable "aws_region" {
+  description = "AWS Region"
+}
+
+variable "ami_id" {
+  description = "Ubuntu AMI ID"
+}
+
+variable "docker_image" {
+  description = "Docker Image with tag"
+}
