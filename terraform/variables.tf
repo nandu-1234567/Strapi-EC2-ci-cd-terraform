@@ -3,7 +3,7 @@ variable "aws_region" {
 }
 
 variable "ami_id" {
-  description = "AMI ID"
+  default = "ami-0b6c6ebed2801a5cb"
 }
 
 variable "docker_image" {
