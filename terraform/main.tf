@@ -12,19 +12,11 @@ resource "aws_key_pair" "strapi_key" {
   public_key = tls_private_key.strapi_key.public_key_openssh
 }
 
-# Save private key locally (optional)
-resource "local_file" "private_key" {
-  content  = tls_private_key.strapi_key.private_key_pem
-  filename = "strapi-key.pem"
-  file_permission = "0400"
-}
-
 resource "aws_security_group" "strapi_sg" {
   name        = "strapi-sg"
   description = "Allow SSH and Strapi"
 
   ingress {
-    description = "SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -32,7 +24,6 @@ resource "aws_security_group" "strapi_sg" {
   }
 
   ingress {
-    description = "Strapi Port"
     from_port   = 1337
     to_port     = 1337
     protocol    = "tcp"
@@ -46,11 +37,12 @@ resource "aws_security_group" "strapi_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
 resource "aws_instance" "strapi_ec2" {
-  ami                         = var.ami_id
-  instance_type               = "t2.micro"
-  key_name                    = aws_key_pair.strapi_key.key_name
-  vpc_security_group_ids      = [aws_security_group.strapi_sg.id]
+  ami                    = var.ami_id
+  instance_type          = "t2.micro"
+  key_name               = aws_key_pair.strapi_key.key_name
+  vpc_security_group_ids = [aws_security_group.strapi_sg.id]
 
   user_data = <<-EOF
               #!/bin/bash
@@ -58,7 +50,10 @@ resource "aws_instance" "strapi_ec2" {
               apt install -y docker.io
               systemctl start docker
               systemctl enable docker
-              docker run -d -p 1337:1337 ${var.docker_image}
+              docker run -d \
+                --restart unless-stopped \
+                -p 1337:1337 \
+                ${var.docker_image}
               EOF
 
   tags = {
