@@ -23,10 +23,11 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -input=false \
-             -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
         working-directory: terraform
+        run: terraform plan -input=false \
+          -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
 
       - name: Terraform Apply
         working-directory: terraform
-        run: terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false \
+          -var="docker_image=${{ secrets.DOCKER_USERNAME }}/strapi:${{ inputs.image_tag }}"
