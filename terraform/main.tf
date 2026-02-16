@@ -2,13 +2,13 @@ provider "aws" {
   region = var.aws_region
 }
 
-resource "tls_private_key" "strapi_key" {
+resource "tls_private_key" "strapi-EC2-key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
-resource "aws_key_pair" "strapi_key" {
-  key_name   = "strapi-key"
+resource "aws_key_pair" "strapi-EC2-key" {
+  key_name   = "strapi-EC2-key"
   public_key = tls_private_key.strapi_key.public_key_openssh
 }
 
